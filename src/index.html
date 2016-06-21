@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta http-equiv="cleartype" content="on">
+  <title>Movies</title>
+</head>
+<body>
+  <div class="container">{{__content__}}</div>
+
+  <style>
+    * {
+      font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+    }
+    body {
+      margin: 0;
+    }
+    h2 {
+      background: #eee;
+      padding: 10px;
+      font-size: 15px;
+      margin: 0;
+    }
+    h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+    .last-update {
+      font-size: 12px;
+      color: #999;
+      padding-left: 2px;
+    }
+    .movie {
+      overflow: hidden;
+      padding: 5px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .movie .link {
+      float: left;
+      margin-right: 10px;
+      width: 20%;
+    }
+    .movie .link img {
+      width: 100%;
+      display: block;
+    }
+    .movie .release-date {
+      color: #999;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .movie .content {
+      padding-right: 5px;
+    }
+    .movie .score {
+      margin-right: 5px;
+    }
+    .icon {
+      background-size: 100%;
+      background-repeat: no-repeat;
+      width: 20px;
+      height: 30px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .tomato-fresh {
+      background-image: url('./img/tomato-fresh.png');
+    }
+    .popcorn-full {
+      background-image: url('./img/popcorn-full.png');
+      width: 18px;
+    }
+    .popcorn-spilled {
+      background-image: url('./img/popcorn-spilled.png');
+      width: 25px;
+    }
+    .tomato-rotten {
+      background-image: url('./img/tomato-rotten.png');
+      width: 23px;
+    }
+    .tomato-certified {
+      background-image: url('./img/tomato-certified.png');
+      width: 25px;
+    }
+    .want-to-see {
+      background-image: url('./img/want-to-see.png');
+      width: 25px;
+    }
+    .douban {
+      background-image: url('./img/douban.png');
+      position: relative;
+      top: 2px;
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      background: #eee;
+      border-top: 1px solid #eee;
+      z-index: 1;
+    }
+    .nav a {
+      font-size: 14px;
+      display: block;
+      flex: 1;
+      text-align: center;
+      color: #555;
+      padding: 12px 0;
+      text-decoration: none;
+      background: #fff;
+      border-right: 1px solid #eee;
+    }
+    .nav a:last-of-type {
+      border-right: none;
+    }
+  </style>
+</body>
+</html>

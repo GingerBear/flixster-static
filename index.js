@@ -2,8 +2,11 @@ var Request = require('request');
 var cheerio = require('cheerio');
 var async = require('async');
 var fs = require('fs');
+var Handlebars = require('handlebars');
 
 var remote = 'http://www.flixster.com';
+var remoteDouban = 'https://movie.douban.com';
+
 var userAgent = [
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0)',
   'AppleWebKit/537.36 (KHTML, like Gecko)',
@@ -51,14 +54,23 @@ request.get(remote + '/', (err, response, body) => {
       return process.exit(1);
     }
 
-    var now = new Date().getTime();
+    var now = new Date();
     var json = {
       sections: sections,
-      lastUpdateTime: now
+      lastUpdateTime: now.getTime()
     };
 
     fs.writeFileSync('./build/data.json', JSON.stringify(json));
+    console.log('INFO: json build complete');
+
+    json.lastUpdateTime = now.toLocaleString();
+    var layout = fs.readFileSync('./src/index.html').toString();
+    var template = fs.readFileSync('./src/template.hbs').toString();
+    fs.writeFileSync('./build/index.html', layout.replace('{{__content__}}', Handlebars.compile(template)(json)));
+    console.log('INFO: html build complete');
+
     console.log('DONE');
+
     return process.exit(0);
   });
 });
@@ -76,24 +88,61 @@ function requestSection(section, cb) {
 }
 
 function requestItem(item, cb) {
-  console.log('requesting ', remote + item.href);
+  async.parallel([
+    cb => getScoreFlixster(item, cb),
+    cb => getScoreDouban(item, cb),
+  ], (err, data) => {
+    if (err) {
+      return cb(err);
+    }
+    item.scores = [].concat(data[0].scores.filter(v => v.value), data[1].scores.filter(v => v.value));
+    item.releaseDate = data[0].releaseDate;
+    return cb();
+  });
+};
 
-  return request.get(remote + item.href, (err, response, body) => {
+function getScoreFlixster(item, cb) {
+  var href = remote + item.href;
+  console.log('requesting...', href);
+
+  return request.get(href, (err, response, body) => {
     if (err) return cb(err);
 
     var $ = cheerio.load(body);
 
-    item.releaseDate = $('.attributes .release-date').eq(0).find('.value').text().trim();
-    item.scores = $('.rating-and-trailer .score').map((index, score) => {
+    var releaseDate = $('.attributes .release-date').eq(0).find('.value').text().trim();
+    var scores = $('.rating-and-trailer .score').map((index, score) => {
       return {
         type: getType($(score).find('i').attr('class')),
         value: $(score).text().trim()
-      }
+      };
     }).get();
 
-    return cb();
+    return cb(null, {
+      releaseDate: releaseDate,
+      scores: scores
+    });
   });
-};
+}
+
+function getScoreDouban(item, cb) {
+  var href = remoteDouban + '/subject_search?search_text=' + encodeURIComponent(item.title);
+  console.log('requesting...', href);
+
+  return request.get(href, (err, response, body) => {
+    if (err) return cb(err);
+
+    var $ = cheerio.load(body);
+    var score = $('.article table').eq(0).find('.rating_nums').text();
+
+    return cb(null, {
+      scores: [{
+        type: 'douban',
+        value: score
+      }]
+    });
+  });
+}
 
 function getType(icons) {
   if (icons.indexOf('fresh') > -1) {

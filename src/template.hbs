@@ -1,0 +1,27 @@
+<div class="last-update">last update: {{lastUpdateTime}}</div>
+<div class="nav">
+  <a href="#section-0">New</a>
+  <a href="#section-1">Top</a>
+  <a href="#section-2">Upcoming</a>
+</div>
+{{#each sections}}
+<div class="section" id="section-{{@key}}">
+  <h2>{{title}}</h2>
+  <div class="movies">
+    {{#each items}}
+      <div class="movie">
+        <a class="link" href="http://www.flixster.com{{href}}"><img src="{{poster}}" alt="{{title}}"></a>
+        <div class="content">
+          <h3>{{title}}</h3>
+          <div class="release-date">{{releaseDate}}</div>
+          <div class="scores">
+          {{#each scores}}
+            <span class="score"><i class="icon {{type}}"></i> {{value}}</span>
+          {{/each}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>
+{{/each}}
