@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nodejs index.js
+# nodejs index.js
 cp -R build/* ./gingerbear.github.io/movies
 cd ./gingerbear.github.io/
 git add .
