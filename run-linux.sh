@@ -1,9 +1,12 @@
 #!/bin/bash
-
+pwd
+cd /root/projects/flixster-static/
 nodejs index.js
-cp -R build/* ./gingerbear.github.io/movies
-cd ./gingerbear.github.io/
+pwd
+cp -R build/* /root/projects/gingerbear.github.io/movies
+pwd
+cd /root/projects/gingerbear.github.io/
+pwd
 git add .
-export NOW=`date +"%Y-%m-%dT%H:%M:%SZ"`
-git commit -am "update movies data $NOW"
+git commit -am "update movies data by cron"
 git push origin master
